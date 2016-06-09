@@ -39,3 +39,16 @@ ItemList.prototype.filter = function(filter){
 ItemList.prototype.length = function(){
   return this.list.length;
 }
+
+ItemList.prototype.toString = function(){
+  str = "ItemList@\"" + this.label + "\"\n";
+  for(var i=0; i<this.list.length; i++){
+    str += "  " + i + ": ";
+    if( this.list[i].toString() ){
+      str += this.list[i].toString();
+    }else{
+      str += "unexpected format";
+    }
+    if( i !== (this.list.length - 1) ) str += "\n";
+  }
+}
