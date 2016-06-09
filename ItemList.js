@@ -51,4 +51,5 @@ ItemList.prototype.toString = function(){
     }
     if( i !== (this.list.length - 1) ) str += "\n";
   }
+  return str;
 }
