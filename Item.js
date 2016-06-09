@@ -38,7 +38,7 @@ Item.prototype.getDetailList = function(){
 Item.prototype.getDetailString = function(){
   var str = "";
   for(var p in this.detail){
-    str += this.detail[p] + ";";
+    str += p + ":" + this.detail[p] + ";";
   }
   return str;
 }
@@ -51,4 +51,5 @@ Item.prototype.toString = function(){
   str += this.name;
   str += "[" + this.price + "]";
   str += "(" + this.getDetailString() + ")";
+  return str;
 }
