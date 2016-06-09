@@ -5,6 +5,9 @@ var ItemList = function(label){
 ItemList.prototype.label = "";
 ItemList.prototype.list = [];
 
+ItemList.prototype.getLabel = function(){ return this.label; };
+ItemList.prototype.setLabel = function(label){ this.label = label; };
+
 ItemList.prototype.add = function(item){
   this.list.push(item);
 }
