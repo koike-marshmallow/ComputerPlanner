@@ -2,14 +2,20 @@
 <html><head>
   <title>item test</title>
   <meta charset="utf-8"/>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
   <script type="text/javascript" src="Item.js"></script>
   <script type="text/javascript" src="ItemList.js"></script>
-</head><body>
+
   <script>
-  var list = new ItemList("test list");
-  list.add(new Item("pencil", 500));
-  list.add(new Item("eraser", 150));
-  list.add(new Item("ruler", 200));
-  document.write(list.toString());
+  $(document).ready(function(){
+    var itemlist = new ItemList("test");
+    itemlist.add(new Item("raspberry pi 3", 6500));
+    itemlist.get(0).setDetail("cpu", "arm 1.2ghz x4");
+    itemlist.get(0).setDetail("feature", "bluetooth, wifi embedded");
+    itemlist.add(new Item("raspberry pi 3 starter kit", 4500));
+    $("#output").text(itemlist.toString());
+  });
   </script>
+</head><body>
+  <pre id="output"></pre>
 </body></html>

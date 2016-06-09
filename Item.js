@@ -1,6 +1,7 @@
 var Item = function(name, price){
   if( name !== undefined ) this.name = name;
   if( price !== undefined ) this.price = price;
+  this.detail = {};
 }
 
 Item.prototype.name = "no name";
