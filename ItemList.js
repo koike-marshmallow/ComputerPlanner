@@ -24,6 +24,10 @@ ItemList.prototype.remove = function(idx){
   this.list.splice(idx, 1);
 }
 
+ItemList.prototype.setEnabled = function(idx, b){
+    this.list[idx].setEnabled(b);
+}
+
 ItemList.prototype.filter = function(filter){
   var result = [];
   if( filter.eval() ){
@@ -40,10 +44,12 @@ ItemList.prototype.length = function(){
   return this.list.length;
 }
 
-ItemList.prototype.getSumPrice = function(){
+ItemList.prototype.getSumPrice = function(all){
     var price = 0;
     for(var i=0; i<this.list.length; i++){
-        price += this.list[i].getPrice();
+        if( this.list[i].isEnabled() && all ){
+            price += this.list[i].getPrice();
+        }
     }
 }
 

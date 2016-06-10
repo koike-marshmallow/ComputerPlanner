@@ -2,12 +2,14 @@ var Item = function(name, price){
   if( name !== undefined ) this.name = name;
   if( price !== undefined ) this.price = price;
   this.detail = {};
+  this.enabled = true;
 }
 
 Item.prototype.name = "no name";
 Item.prototype.price = 0;
 Item.prototype.detail = {};
 Item.prototype.comment = "";
+Item.prototype.enabled = true;
 
 Item.prototype.getName = function(){ return this.name; };
 Item.prototype.setName = function(name){ this.name = name; };
@@ -46,6 +48,8 @@ Item.prototype.getDetailString = function(){
 
 Item.prototype.getComment = function(){ return this.comment; };
 Item.prototype.setComment = function(com){ this.comment = com; };
+Item.prototype.isEnabled = function(){ return this.enabled; };
+Item.prototype.setEnabled = function(b){ this.enabled = b; };
 
 Item.prototype.toString = function(){
   var str = "Item@";
