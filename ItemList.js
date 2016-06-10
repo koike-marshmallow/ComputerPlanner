@@ -40,6 +40,13 @@ ItemList.prototype.length = function(){
   return this.list.length;
 }
 
+ItemList.prototype.getSumPrice = function(){
+    var price = 0;
+    for(var i=0; i<this.list.length; i++){
+        price += this.list[i].getPrice();
+    }
+}
+
 ItemList.prototype.toString = function(){
   str = "ItemList@\"" + this.label + "\"\n";
   for(var i=0; i<this.list.length; i++){
