@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Wish List</title>
+  <meta charset="utf-8"/>
+
+  <script type="text/javascript" src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
+  <script type="text/javascript" src="Item.js"></script>
+  <script type="text/javascript" src="ItemList.js"></script>
+  <script>
+  var ITEMLIST = null;
+  var SELECTED = null;
+  $(document).ready(function(){
+    ITEMLIST = new ItemList();
+    SELECTED = null;
+    reloadItemList();
+  });
+
+  $(".createBtn").onClick(function(){
+    alert("create");
+  })
+
+  </script>
+</head>
+
+<body>
+  <h1>ウィッシュリスト</h1>
+  <button class="createBtn" type="button">新規作成</button>
+  <table>
+    <tr><td>アイテム名</td>
+      <td><input id="form_itemName" type="text"/></td></tr>
+    <tr><td>価格</td>
+      <td><input id="form_itemPrice" type="text"/></td></tr>
+  </table>
+  <button class="registBtn" type="button">登録</button>
+
+  <h2>リスト</h2>
+  <table id="itemList">
+  </table>
