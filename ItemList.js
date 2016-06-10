@@ -16,6 +16,10 @@ ItemList.prototype.insert = function(idx, item){
   this.list.splice(idx, 0, item);
 }
 
+ItemList.prototype.set = function(idx, item){
+  this.list[idx] = item;
+}
+
 ItemList.prototype.get = function(idx){
   return this.list[idx];
 }

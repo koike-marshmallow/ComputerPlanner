@@ -11,15 +11,65 @@
   var ITEMLIST = null;
   var SELECTED = null;
   $(document).ready(function(){
-    ITEMLIST = new ItemList();
+    ITEMLIST = new ItemList("test");
     SELECTED = null;
-    //reloadItemList();
+    reloadItemList();
   });
 
-  $(".createBtn").click(function(){
-    alert("create");
+  $(function(){
+    $(".createBtn").click(function(){
+      SELECTED = null;
+      $("#form_itemName").val("");
+      $("#form_itemPrice").val("");
+    });
+  });
+  $(function(){
+    $(".registBtn").click(function(){
+      var iname = $("#form_itemName").val();
+      var iprice = $("#form_itemPrice").val();
+      if( SELECTED == null ){
+        ITEMLIST.add(new Item(iname, iprice));
+      }else{
+        ITEMLIST.set(SELECTED, new Item(iname, iprice));
+      }
+      reloadItemList();
+    });
   });
 
+  function reloadItemList(){
+    var table = $("#itemList");
+    table.empty();
+    table.append($("<caption></caption>").text(ITEMLIST.getLabel()));
+    table.attr("border", "1");
+    table.append(
+      $("<tr></tr>").append(
+        $("<th></th>").text("id"),
+        $("<th></th>").text("name"),
+        $("<th></th>").text("price"),
+        $("<th></th>").text("ctrl")
+      )
+    );
+    for(var i=0; i<ITEMLIST.length(); i++)
+    with({row:i}){
+      var item = ITEMLIST.get(i);
+      table.append(
+        $("<tr></tr>").append(
+          $("<td></td>").text(i),
+          $("<td></td>").text(item.getName()),
+          $("<td></td>").text(item.getPrice()),
+          $("<td></td>").append(
+            $("<button></button>").click(function(){
+              SELECTED = row;
+              $("#form_itemName").val(ITEMLIST.get(row).getName());
+              $("#form_itemPrice").val(ITEMLIST.get(row).getPrice());
+            })
+            .attr("type", "button")
+            .text("edit")
+          )
+        )
+      );
+    }
+  }
   </script>
 </head>
 
