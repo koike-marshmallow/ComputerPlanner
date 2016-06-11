@@ -1,6 +1,6 @@
 var Item = function(name, price){
   if( name !== undefined ) this.name = name;
-  if( price !== undefined ) this.price = price;
+  if( price !== undefined ) this.setPrice(price);
   this.detail = {};
   this.enabled = true;
 }
@@ -14,7 +14,7 @@ Item.prototype.enabled = true;
 Item.prototype.getName = function(){ return this.name; };
 Item.prototype.setName = function(name){ this.name = name; };
 Item.prototype.getPrice = function(){ return this.price; };
-Item.prototype.setPrice = function(price){ this.price = price };
+Item.prototype.setPrice = function(price){ this.price = parseInt(price) };
 
 Item.prototype.setDetail = function(l, v){
   if( l !== undefined ){
@@ -57,4 +57,27 @@ Item.prototype.toString = function(){
   str += "[" + this.price + "]";
   str += "(" + this.getDetailString() + ")";
   return str;
+}
+
+Item.stringifyJson = function(item){
+  var data = {}
+  data.name = item.name;
+  data.price = item.price;
+  data.detail = item.detail;
+  data.enabled = item.enabled;
+  data.comment = item.comment;
+  return JSON.stringify(data);
+}
+
+Item.parseJson = function(json){
+  var pdata;
+  try{pdata = JSON.parse(json);}
+  catch(e){return null;}
+
+  var item = new Item(pdata.name, pdata.price);
+  item.detail = pdata.detail;
+  item.comment = pdata.comment;
+  item.enabled = pdata.enabled;
+
+  return item;
 }

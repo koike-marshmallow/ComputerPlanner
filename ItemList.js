@@ -1,5 +1,6 @@
 var ItemList = function(label){
   if( label !== undefined ) this.label = label;
+  this.list = [];
 };
 
 ItemList.prototype.label = "";
@@ -51,14 +52,15 @@ ItemList.prototype.length = function(){
 ItemList.prototype.getSumPrice = function(all){
     var price = 0;
     for(var i=0; i<this.list.length; i++){
-        if( this.list[i].isEnabled() && all ){
+        if( this.list[i].isEnabled() || all ){
             price += this.list[i].getPrice();
         }
     }
+    return price;
 }
 
 ItemList.prototype.toString = function(){
-  str = "ItemList@\"" + this.label + "\"\n";
+  str = "ItemList@\"" + this.label + "\"(" + this.length() + ")\n";
   for(var i=0; i<this.list.length; i++){
     str += "  " + i + ": ";
     if( this.list[i].toString() ){
@@ -69,4 +71,30 @@ ItemList.prototype.toString = function(){
     if( i !== (this.list.length - 1) ) str += "\n";
   }
   return str;
+}
+
+ItemList.stringifyJson = function(items){
+  var data = {};
+  data.label = items.label;
+  data.itemJsons = [];
+  for(var i=0; i<items.length(); i++){
+    data.itemJsons.push(Item.stringifyJson(items.get(i)));
+  }
+  return JSON.stringify(data);
+}
+
+ItemList.parseJson = function(json){
+  var pdata;
+  try{pdata = JSON.parse(json);}
+  catch(e){return null;}
+
+  var li = new ItemList(pdata.label);
+  for(var i=0; i<pdata.itemJsons.length; i++){
+    var tmp = Item.parseJson(pdata.itemJsons[i]);
+    if( tmp != null ){
+      li.add(tmp);
+    }
+  }
+
+  return li;
 }
