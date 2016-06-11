@@ -25,13 +25,12 @@ $(".itemFormApplyBtn").on('click', function(event){
   var com = $(this).data("command");
   $(this).data("command", null);
   if( com == "add" ){
-    alert("add");
     ITEMLIST.add(new Item(iname, iprice));
   }else{
     console.log("undefined command: " + com);
   }
   $(".itemDialog").modal('hide');
-  setItemlistToTable($(".itemlist-table"). ITEMLIST);
+  setItemlistToTable($(".itemlist-table"), ITEMLIST);
 });
 
 function setItemlistToTable(table, list){
