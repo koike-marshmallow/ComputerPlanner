@@ -51,14 +51,15 @@ ItemList.prototype.length = function(){
 ItemList.prototype.getSumPrice = function(all){
     var price = 0;
     for(var i=0; i<this.list.length; i++){
-        if( this.list[i].isEnabled() && all ){
+        if( this.list[i].isEnabled() || all ){
             price += this.list[i].getPrice();
         }
     }
+    return price;
 }
 
 ItemList.prototype.toString = function(){
-  str = "ItemList@\"" + this.label + "\"\n";
+  str = "ItemList@\"" + this.label + "\"(" + this.length() + ")\n";
   for(var i=0; i<this.list.length; i++){
     str += "  " + i + ": ";
     if( this.list[i].toString() ){
