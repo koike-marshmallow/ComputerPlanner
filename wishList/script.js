@@ -7,6 +7,33 @@ $(document).ready(function(){
   setItemlistToTable($(".itemlist-table"), ITEMLIST);
 });
 
+$(".itemDialog").on('show.bs.modal', function(event){
+  var btn = $(event.relatedTarget);
+  var applyBtn = $(".itemFormApplyBtn");
+  var command = btn.data("command");
+  var index = btn.data("index");
+  if( command == "add" ){
+    applyBtn.data("command", command);
+  }else{
+    console.log("undefined command:" + command);
+  }
+});
+
+$(".itemFormApplyBtn").on('click', function(event){
+  var iname = $("#itemForm-ItemName").val();
+  var iprice = $("#itemForm-ItemPrice").val();
+  var com = $(this).data("command");
+  $(this).data("command", null);
+  if( com == "add" ){
+    alert("add");
+    ITEMLIST.add(new Item(iname, iprice));
+  }else{
+    console.log("undefined command: " + com);
+  }
+  $(".itemDialog").modal('hide');
+  setItemlistToTable($(".itemlist-table"). ITEMLIST);
+});
+
 function setItemlistToTable(table, list){
   console.log("reload");
   console.log(list.toString());
