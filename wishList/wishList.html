@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Wish List</title>
+  <meta charset="utf-8"/>
+
+  <script type="text/javascript" src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
+  <script type="text/javascript" src="Item.js"></script>
+  <script type="text/javascript" src="ItemList.js"></script>
+  <script>
+  var ITEMLIST = null;
+  var SELECTED = null;
+  $(document).ready(function(){
+    ITEMLIST = new ItemList("test");
+    SELECTED = null;
+    reloadItemList();
+  });
+
+  $(function(){
+    $(".createBtn").click(function(){
+      SELECTED = null;
+      $("#form_itemName").val("");
+      $("#form_itemPrice").val("");
+    });
+  });
+  $(function(){
+    $(".registBtn").click(function(){
+      var iname = $("#form_itemName").val();
+      var iprice = $("#form_itemPrice").val();
+      if( SELECTED == null ){
+        ITEMLIST.add(new Item(iname, iprice));
+      }else{
+        ITEMLIST.set(SELECTED, new Item(iname, iprice));
+      }
+      reloadItemList();
+    });
+  });
+
+  function reloadItemList(){
+    var table = $("#itemList");
+    table.empty();
+    table.append($("<caption></caption>").text(ITEMLIST.getLabel()));
+    table.attr("border", "1");
+    table.append(
+      $("<tr></tr>").append(
+        $("<th></th>").text("id"),
+        $("<th></th>").text("name"),
+        $("<th></th>").text("price"),
+        $("<th></th>").text("ctrl")
+      )
+    );
+    for(var i=0; i<ITEMLIST.length(); i++)
+    with({row:i}){
+      var item = ITEMLIST.get(i);
+      table.append(
+        $("<tr></tr>").append(
+          $("<td></td>").text(i),
+          $("<td></td>").text(item.getName()),
+          $("<td></td>").text(item.getPrice()),
+          $("<td></td>").append(
+            $("<button></button>").click(function(){
+              SELECTED = row;
+              $("#form_itemName").val(ITEMLIST.get(row).getName());
+              $("#form_itemPrice").val(ITEMLIST.get(row).getPrice());
+            })
+            .attr("type", "button")
+            .text("edit")
+          )
+        )
+      );
+    }
+  }
+  </script>
+</head>
+
+<body>
+  <h1>ウィッシュリスト</h1>
+  <button class="createBtn" type="button">新規作成</button>
+  <table>
+    <tr><td>アイテム名</td>
+      <td><input id="form_itemName" type="text"/></td></tr>
+    <tr><td>価格</td>
+      <td><input id="form_itemPrice" type="text"/></td></tr>
+  </table>
+  <button class="registBtn" type="button">登録</button>
+
+  <h2>リスト</h2>
+  <table id="itemList">
+  </table>
