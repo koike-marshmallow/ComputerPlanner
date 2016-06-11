@@ -18,9 +18,15 @@ function createGlyphiconElement(glyphiconName){
 
 
 $(document).ready(function(){
-  ITEMLIST = new ItemList("test");
-  ITEMLIST.add(new Item("粒あんパン", 145));
-  ITEMLIST.add(new Item("デニッシュロール", 105));
+  var resource = localStorage.getItem('itemlist');
+  console.log(resource);
+  if( resource !== undefined && resource != null ){
+    ITEMLIST = ItemList.parseJson(resource);
+  }else{
+    ITEMLIST = new ItemList("test");
+    ITEMLIST.add(new Item("粒あんパン", 145));
+    ITEMLIST.add(new Item("デニッシュロール", 105));
+  }
   setItemlistToTable($(".itemlist-table"), ITEMLIST);
 });
 
@@ -70,7 +76,7 @@ $(".itemFormApplyBtn").on('click', function(event){
     console.log("undefined command: " + com);
   }
   $(".itemDialog").modal('hide');
-  setItemlistToTable($(".itemlist-table"), ITEMLIST);
+  updateItemList();
 });
 
 function setItemlistToTable(table, list){
@@ -134,4 +140,5 @@ function setItemlistToTable(table, list){
 
 function updateItemList(){
   setItemlistToTable($(".itemlist-table"), ITEMLIST);
+  localStorage.setItem('itemlist', ItemList.stringifyJson(ITEMLIST));
 }
