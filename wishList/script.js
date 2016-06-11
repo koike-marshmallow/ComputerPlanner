@@ -1,5 +1,23 @@
 var ITEMLIST = null;
 
+function createItemDialogButton(contents, classValue, params){
+  console.log(params.index);
+  var button = $("<button></button>")
+    .append(contents)
+    .attr("class", classValue);
+  if( params.target ) button.attr("data-toggle", "modal")
+    .attr("data-target", params.target);
+  if( params.command ) button.attr("data-command", params.command);
+  if( params.index !== undefined ) button.attr("data-index", params.index);
+  if( params.onClickCallback ) button.on('click', params.onClickCallback);
+  return button;
+}
+
+function createGlyphiconElement(glyphiconName){
+  return $("<span></span>").attr("class", "glyphicon " + glyphiconName);
+}
+
+
 $(document).ready(function(){
   ITEMLIST = new ItemList("test");
   ITEMLIST.add(new Item("粒あんパン", 145));
@@ -70,42 +88,39 @@ function setItemlistToTable(table, list){
       )
     )
   );
+
   var tbody = $("<tbody></tbody>");
+  var deleteBtnCallback = function(event){
+    var idx = $(this).data("index");
+    if( idx >= 0 && idx < ITEMLIST.length() ){
+      if( confirm(ITEMLIST.get(idx).getName() + "を削除しますか？") ){
+        ITEMLIST.remove(idx);
+        updateItemList();
+      }
+    }
+  }
+
   for(var i=0; i<list.length(); i++){
     var item = list.get(i);
+    var editBtn = createItemDialogButton(
+      [createGlyphiconElement("dlyphicon-pencil"), "編集"],
+      "btn btn-default",
+      {target:"#myModal", command: "edit", index:i});
+    var deleteBtn = createItemDialogButton(
+      [createGlyphiconElement("glyphicon-trash"), "削除"],
+      "btn btn-default",
+      {command:"edit", index:i, onClickCallback:deleteBtnCallback});
+
     tbody.append(
       $("<tr></tr>").append(
         $("<td></td>").text(i),
         $("<td></td>").text(item.getName()),
         $("<td></td>").text(item.getPrice()),
-        $("<td></td>").append(
-          $("<button></button>").append(
-            $("<span></span>").attr("class", "glyphicon glyphicon-pencil"),
-            "編集")
-            .attr("class", "btn btn-default")
-            .attr("data-toggle", "modal")
-            .attr("data-target", "#myModal")
-            .attr("data-command", "edit")
-            .attr("data-index", i),
-          $("<button></button>").append(
-            $("<span></span>").attr("class", "glyphicon glyphicon-trash"),
-            "削除")
-            .attr("class", "btn btn-default")
-            .attr("data-command", "delete")
-            .attr("data-index", i)
-            .on('click', function(event){
-              var idx = $(this).data("index");
-              if( idx >= 0 && idx < ITEMLIST.length() ){
-                if( confirm(ITEMLIST.get(idx).getName() + "を削除しますか？") ){
-                  ITEMLIST.remove(idx);
-                  updateItemList();
-                }
-              }
-            })
-        )
+        $("<td></td>").append(editBtn, deleteBtn)
       )
     );
   }
+  
   tbody.append(
     $("<tr></tr>").append(
       $("<td></td>").attr("colspan", "2")
