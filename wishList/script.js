@@ -35,16 +35,19 @@ $(".itemDialog").on('show.bs.modal', function(event){
   var applyBtn = $(".itemFormApplyBtn");
   var command = btn.data("command");
   var index = btn.data("index");
+  var elem_title = $(".itemDialog-title");
   var form_name = $("#itemForm-ItemName");
   var form_price = $("#itemForm-ItemPrice");
 
   if( command == "add" ){
+    elem_title.text("新規追加");
     applyBtn.data("command", "add");
     form_name.val("");
     form_price.val("");
 
   }else if( command == "edit" ){
     if( index >= 0 && index < ITEMLIST.length() ){
+      elem_title.text("編集");
       applyBtn.data("command", "edit");
       applyBtn.data("index", index);
       form_name.val(ITEMLIST.get(index).getName());
@@ -86,7 +89,7 @@ function setItemlistToTable(table, list){
   table.append(
     $("<thead></thead>").append(
       $("<tr></tr>").append(
-        $("<th></th>").text("id"),
+        $("<th></th>").text("No."),
         $("<th></th>").text("名前"),
         $("<th></th>").text("価格"),
         $("<th></th>").text("操作")
@@ -108,17 +111,17 @@ function setItemlistToTable(table, list){
   for(var i=0; i<list.length(); i++){
     var item = list.get(i);
     var editBtn = createItemDialogButton(
-      [createGlyphiconElement("glyphicon-pencil"), "編集"],
+      [createGlyphiconElement("glyphicon-pencil"), " 編集"],
       "btn btn-default",
       {target:"#myModal", command: "edit", index:i});
     var deleteBtn = createItemDialogButton(
-      [createGlyphiconElement("glyphicon-trash"), "削除"],
+      [createGlyphiconElement("glyphicon-trash"), " 削除"],
       "btn btn-default",
       {command:"edit", index:i, onClickCallback:deleteBtnCallback});
 
     tbody.append(
       $("<tr></tr>").append(
-        $("<td></td>").text(i),
+        $("<td></td>").text(i + 1),
         $("<td></td>").text(item.getName()),
         $("<td></td>").text(item.getPrice()),
         $("<td></td>").append(editBtn, deleteBtn)
