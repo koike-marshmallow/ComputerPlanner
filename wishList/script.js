@@ -14,6 +14,8 @@ $(".itemDialog").on('show.bs.modal', function(event){
   var index = btn.data("index");
   if( command == "add" ){
     applyBtn.data("command", command);
+    $("#itemForm-ItemName").val("");
+    $("#itemForm-ItemPrice").val("");
   }else{
     console.log("undefined command:" + command);
   }
