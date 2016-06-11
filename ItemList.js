@@ -1,5 +1,6 @@
 var ItemList = function(label){
   if( label !== undefined ) this.label = label;
+  this.list = [];
 };
 
 ItemList.prototype.label = "";
@@ -70,4 +71,30 @@ ItemList.prototype.toString = function(){
     if( i !== (this.list.length - 1) ) str += "\n";
   }
   return str;
+}
+
+ItemList.stringifyJson = function(items){
+  var data = {};
+  data.label = items.label;
+  data.itemJsons = [];
+  for(var i=0; i<items.length(); i++){
+    data.itemJsons.push(Item.stringifyJson(items.get(i)));
+  }
+  return JSON.stringify(data);
+}
+
+ItemList.parseJson = function(json){
+  var pdata;
+  try{pdata = JSON.parse(json);}
+  catch(e){return null;}
+
+  var li = new ItemList(pdata.label);
+  for(var i=0; i<pdata.itemJsons.length; i++){
+    var tmp = Item.parseJson(pdata.itemJsons[i]);
+    if( tmp != null ){
+      li.add(tmp);
+    }
+  }
+
+  return li;
 }

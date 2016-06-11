@@ -58,3 +58,26 @@ Item.prototype.toString = function(){
   str += "(" + this.getDetailString() + ")";
   return str;
 }
+
+Item.stringifyJson = function(item){
+  var data = {}
+  data.name = item.name;
+  data.price = item.price;
+  data.detail = item.detail;
+  data.enabled = item.enabled;
+  data.comment = item.comment;
+  return JSON.stringify(data);
+}
+
+Item.parseJson = function(json){
+  var pdata;
+  try{pdata = JSON.parse(json);}
+  catch(e){return null;}
+
+  var item = new Item(pdata.name, pdata.price);
+  item.detail = pdata.detail;
+  item.comment = pdata.comment;
+  item.enabled = pdata.enabled;
+
+  return item;
+}

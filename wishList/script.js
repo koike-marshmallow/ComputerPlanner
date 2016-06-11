@@ -1,7 +1,6 @@
 var ITEMLIST = null;
 
 function createItemDialogButton(contents, classValue, params){
-  console.log(params.index);
   var button = $("<button></button>")
     .append(contents)
     .attr("class", classValue);
@@ -75,8 +74,8 @@ $(".itemFormApplyBtn").on('click', function(event){
 });
 
 function setItemlistToTable(table, list){
-  console.log("reload");
-  console.log(list.toString());
+  var lj = ItemList.stringifyJson(list);
+  console.log(lj + "-> " + ItemList.parseJson(lj).toString());
   table.empty();
   table.append(
     $("<thead></thead>").append(
@@ -103,7 +102,7 @@ function setItemlistToTable(table, list){
   for(var i=0; i<list.length(); i++){
     var item = list.get(i);
     var editBtn = createItemDialogButton(
-      [createGlyphiconElement("dlyphicon-pencil"), "編集"],
+      [createGlyphiconElement("glyphicon-pencil"), "編集"],
       "btn btn-default",
       {target:"#myModal", command: "edit", index:i});
     var deleteBtn = createItemDialogButton(
@@ -120,7 +119,7 @@ function setItemlistToTable(table, list){
       )
     );
   }
-  
+
   tbody.append(
     $("<tr></tr>").append(
       $("<td></td>").attr("colspan", "2")
