@@ -79,14 +79,29 @@ function setItemlistToTable(table, list){
         $("<td></td>").text(item.getName()),
         $("<td></td>").text(item.getPrice()),
         $("<td></td>").append(
-          $("<button></button>")
-          .attr("data-toggle", "modal")
-          .attr("data-target", "#myModal")
-          .attr("data-command", "edit")
-          .attr("data-index", i).append(
+          $("<button></button>").append(
             $("<span></span>").attr("class", "glyphicon glyphicon-pencil"),
-            "編集"
-          ).attr("class", "btn btn-default")
+            "編集")
+            .attr("class", "btn btn-default")
+            .attr("data-toggle", "modal")
+            .attr("data-target", "#myModal")
+            .attr("data-command", "edit")
+            .attr("data-index", i),
+          $("<button></button>").append(
+            $("<span></span>").attr("class", "glyphicon glyphicon-trash"),
+            "削除")
+            .attr("class", "btn btn-default")
+            .attr("data-command", "delete")
+            .attr("data-index", i)
+            .on('click', function(event){
+              var idx = $(this).data("index");
+              if( idx >= 0 && idx < ITEMLIST.length() ){
+                if( confirm(ITEMLIST.get(idx).getName() + "を削除しますか？") ){
+                  ITEMLIST.remove(idx);
+                  updateItemList();
+                }
+              }
+            })
         )
       )
     );
@@ -100,4 +115,9 @@ function setItemlistToTable(table, list){
     )
   );
   table.append(tbody);
+}
+
+
+function updateItemList(){
+  setItemlistToTable($(".itemlist-table"), ITEMLIST);
 }
