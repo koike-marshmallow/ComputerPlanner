@@ -11,14 +11,17 @@ ItemList.prototype.setLabel = function(label){ this.label = label; };
 
 ItemList.prototype.add = function(item){
   this.list.push(item);
+  return this;
 }
 
 ItemList.prototype.insert = function(idx, item){
   this.list.splice(idx, 0, item);
+  return this;
 }
 
 ItemList.prototype.set = function(idx, item){
   this.list[idx] = item;
+  return this;
 }
 
 ItemList.prototype.get = function(idx){
@@ -27,10 +30,12 @@ ItemList.prototype.get = function(idx){
 
 ItemList.prototype.remove = function(idx){
   this.list.splice(idx, 1);
+  return this;
 }
 
 ItemList.prototype.setEnabled = function(idx, b){
     this.list[idx].setEnabled(b);
+    return this;
 }
 
 ItemList.prototype.filter = function(filter){
