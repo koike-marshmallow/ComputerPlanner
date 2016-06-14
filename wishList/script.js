@@ -16,6 +16,13 @@ function createGlyphiconElement(glyphiconName){
   return $("<span></span>").attr("class", "glyphicon " + glyphiconName);
 }
 
+function generateInitialItemList(){
+  var list = new ItemList("test");
+  list.add(new Item("Sumple Item 1", 500))
+    .add(new Item("Sumple Item 2", 1260))
+    .add(new Item("Sumple Item 3", 700));
+  return list;
+}
 
 $(document).ready(function(){
   var resource = localStorage.getItem('itemlist');
@@ -23,9 +30,7 @@ $(document).ready(function(){
   if( resource !== undefined && resource != null ){
     ITEMLIST = ItemList.parseJson(resource);
   }else{
-    ITEMLIST = new ItemList("test");
-    ITEMLIST.add(new Item("粒あんパン", 145));
-    ITEMLIST.add(new Item("デニッシュロール", 105));
+    ITEMLIST = generateInitialItemList();
   }
   setItemlistToTable($(".itemlist-table"), ITEMLIST);
 });
@@ -80,6 +85,15 @@ $(".itemFormApplyBtn").on('click', function(event){
   }
   $(".itemDialog").modal('hide');
   updateItemList();
+});
+
+$(".init-btn").on('click', function(event){
+  console.log(event);
+  if( confirm("ウィッシュリストを初期化します。よろしいですか？") ){
+    localStorage.removeItem('itemlist');
+    ITEMLIST = generateInitialItemList();
+    updateItemList();
+  }
 });
 
 function setItemlistToTable(table, list){
