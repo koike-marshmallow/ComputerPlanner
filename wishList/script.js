@@ -26,7 +26,6 @@ function generateInitialItemList(){
 
 $(document).ready(function(){
   var resource = localStorage.getItem('itemlist');
-  console.log(resource);
   if( resource !== undefined && resource != null ){
     ITEMLIST = ItemList.parseJson(resource);
   }else{
@@ -88,7 +87,6 @@ $(".itemFormApplyBtn").on('click', function(event){
 });
 
 $(".init-btn").on('click', function(event){
-  console.log(event);
   if( confirm("ウィッシュリストを初期化します。よろしいですか？") ){
     localStorage.removeItem('itemlist');
     ITEMLIST = generateInitialItemList();
@@ -97,8 +95,6 @@ $(".init-btn").on('click', function(event){
 });
 
 function setItemlistToTable(table, list){
-  var lj = ItemList.stringifyJson(list);
-  console.log(lj + "-> " + ItemList.parseJson(lj).toString());
   table.empty();
   table.append(
     $("<thead></thead>").append(
