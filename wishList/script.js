@@ -18,9 +18,9 @@ function createGlyphiconElement(glyphiconName){
 
 function generateInitialItemList(){
   var list = new ItemList("test");
-  list.add(new Item("Sumple Item 1", 500))
-    .add(new Item("Sumple Item 2", 1260))
-    .add(new Item("Sumple Item 3", 700));
+  list.add(new Item("Sample Item 1", 500))
+    .add(new Item("Sample Item 2", 1260))
+    .add(new Item("Sample Item 3", 700));
   return list;
 }
 
