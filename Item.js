@@ -14,7 +14,7 @@ Item.prototype.enabled = true;
 Item.prototype.getName = function(){ return this.name; };
 Item.prototype.setName = function(name){ this.name = name; return this;};
 Item.prototype.getPrice = function(){ return this.price; };
-Item.prototype.setPrice = function(price){ this.price = parseInt(price) return this;};
+Item.prototype.setPrice = function(price){ this.price = parseInt(price); return this;};
 
 Item.prototype.setDetail = function(l, v){
   if( l !== undefined ){
