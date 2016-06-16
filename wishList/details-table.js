@@ -46,6 +46,21 @@ DetailsTable.prototype.removeRow = function(labelName){
   return false;
 }
 
+DetailsTable.prototype.setValue = function(label, value, force_insert){
+  for(var i=0; i<this.labels.length; i++){
+    if( this.labels[i] == label ){
+      this.inputs[i].val(value);
+      return true;
+    }
+  }
+  if( force_insert ){
+    this.addRow(label);
+    this.inputs[this.inputs.length - 1].val(value);
+    return true;
+  }
+  return false;
+}
+
 DetailsTable.prototype.generateTableRow = function(label, input){
   return $("<tr></tr>").append(
     $("<td></td>").text(label),
