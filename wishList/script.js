@@ -83,6 +83,7 @@ $(document).ready(function(){
   DETAILS_TABLE = new DetailsTable();
   ITEM_LIST = generateInitialItemList();
   updateItemListTable();
+  updateDetailsTable();
 });
 
 $(".item-edit-dialog").on('show.bs.modal', function(event){

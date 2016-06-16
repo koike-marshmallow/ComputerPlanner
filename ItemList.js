@@ -11,14 +11,17 @@ ItemList.prototype.setLabel = function(label){ this.label = label; };
 
 ItemList.prototype.add = function(item){
   this.list.push(item);
+  return this;
 }
 
 ItemList.prototype.insert = function(idx, item){
   this.list.splice(idx, 0, item);
+  return this;
 }
 
 ItemList.prototype.set = function(idx, item){
   this.list[idx] = item;
+  return this;
 }
 
 ItemList.prototype.get = function(idx){
@@ -27,6 +30,7 @@ ItemList.prototype.get = function(idx){
 
 ItemList.prototype.remove = function(idx){
   this.list.splice(idx, 1);
+  return this;
 }
 
 ItemList.prototype.setEnabled = function(idx, b){
@@ -58,6 +62,26 @@ ItemList.prototype.getSumPrice = function(all){
     }
     return price;
 }
+
+ItemList.prototype.allDetailLabels = function(){
+  var collector = {
+    labels: [],
+    push: function(key){
+      var equals = function(e, i, a){return e == key;};
+      if( this.labels.filter(equals).length < 1 ){
+        this.labels.push(key);
+      }
+  }};
+
+  for(var i=0; i<this.list.length; i++){
+    var tmp = this.list[i].getDetailList();
+    for(var j=0; j<tmp.length; j++){
+      collector.push(tmp[j].label);
+    }
+  }
+
+  return collector.labels;
+}  
 
 ItemList.prototype.toString = function(){
   str = "ItemList@\"" + this.label + "\"(" + this.length() + ")\n";
