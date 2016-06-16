@@ -1,7 +1,6 @@
 var DETAILS_TABLE = null;
 
 function updateDetailsTable(){
-  console.log("details table update");
   if( DETAILS_TABLE != null ){
     $("#itemFormDetailsTable").empty().append(
       $("<thead></thead>").append(
@@ -26,7 +25,7 @@ function updateDetailsTable(){
 
 $(document).ready(function(){
   DETAILS_TABLE = new DetailsTable();
-  DETAILS_TABLE.addRow("key1");
+  DETAILS_TABLE.setInitialRows("key1", ["key2", "key3"]);
   updateDetailsTable();
 });
 

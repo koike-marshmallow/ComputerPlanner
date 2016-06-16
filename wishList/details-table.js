@@ -9,6 +9,23 @@ DetailsTable.prototype.createDetailsInput = function(labelName){
     .data("label", labelName);
 }
 
+DetailsTable.prototype.clearRows = function(){
+  this.labels = [];
+  this.inputs = [];
+}
+
+DetailsTable.prototype.setInitialRows = function(labels){
+  for(var i=0; i<arguments.length; i++){
+    if( jQuery.isArray(arguments[i]) ){
+      for(var j=0; j<arguments[i].length; j++){
+        this.addRow(arguments[i][j]);
+      }
+    }else{
+      this.addRow(arguments[i]);
+    }
+  }
+}
+
 DetailsTable.prototype.addRow = function(labelName){
   var aryFilter = function(elm, idx, ary){ return elm == labelName; };
   if( this.labels.filter(aryFilter) <= 0 ){
