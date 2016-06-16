@@ -38,6 +38,7 @@ DetailsTable.prototype.generateTableRow = function(label, input){
         $("<span></span>").addClass("glyphicon glyphicon-remove"))
         .addClass("details-table-remove-btn")
         .data("label", label)
+        .addClass("btn btn-default btn-xs")
     )
   );
 }
