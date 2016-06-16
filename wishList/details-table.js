@@ -52,3 +52,11 @@ DetailsTable.prototype.generateTableBody = function(){
   }
   return tbody;
 }
+
+DetailsTable.prototype.getValues = function(){
+  var values = {};
+  for(var i=0; i<this.labels.length; i++){
+    values[this.labels[i]] = this.inputs[i].val();
+  }
+  return values;
+}
