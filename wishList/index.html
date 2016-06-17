@@ -58,13 +58,6 @@
 
       <h1>Wish List</h1>
 
-      <p>
-      <button type="button" class="btn btn-default btn-xs"
-        data-toggle="modal" data-target="#itemEditModal">編集ダイアログ</button>
-      <button type="button" class="btn btn-default btn-xs"
-        data-toggle="modal" data-target="#itemRemoveModal">削除ダイアログ</button>
-      </p>
-
       <button type="button" class="btn btn-primary"
         data-toggle="modal" data-target="#itemEditModal" data-command="add">
       <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
@@ -75,8 +68,7 @@
           <tr><th>id</th><th>品名</th><th>価格</th></tr>
         </thead>
         <tbody>
-          <tr><td>1</td><td>粒あんパン</td><td>135</td></tr>
-          <tr><td>2</td><td>デニッシュロール</td><td>105</td></tr>
+          <tr><td>1</td><td>もの</td><td>135</td></tr>
           <tr><td colspan="2">合計</td><td>240</td></tr>
         </tbody>
       </table>
@@ -107,14 +99,6 @@
               <table class="table" id="itemFormDetailsTable">
                 <thead><tr><th>項目</th><th>値</th><th></th></tr></thead>
                 <tbody id="itemFormDetailsTableBody">
-                  <tr><td>key1</td><td>
-                    <input type="text" class="form-control" data-label="key2"/></td>
-                    <td><button type="button" class="btn btn-default btn-xs">
-                    <span class="glyphicon glyphicon-remove"></span></button></td></tr>
-                  <tr><td>key2</td><td>
-                    <input type="text" class="form-control" data-label="key2"/></td>
-                    <td><button type="button" class="btn btn-default btn-xs">
-                    <span class="glyphicon glyphicon-remove"></span></button></td></tr>
                 </tbody>
               </table>
               <button type="button" class="btn btn-default btn-sm details-table-add-btn">
