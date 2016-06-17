@@ -86,9 +86,9 @@ DetailsTable.prototype.generateTableBody = function(){
 }
 
 DetailsTable.prototype.getValues = function(){
-  var values = {};
+  var values = [];
   for(var i=0; i<this.labels.length; i++){
-    values[this.labels[i]] = this.inputs[i].val();
+    values.push({label:this.labels[i], value:this.inputs[i].val()});
   }
   return values;
 }

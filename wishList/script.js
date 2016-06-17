@@ -74,15 +74,16 @@ function updateDetailsTable(){
 }
 
 function initItemEditDialog(com, idx){
+  var submitBtn = $(".item-edit-dialog-submit-btn");
+
   $("#itemFormInputName").val("");
   $("#itemFormInputPrice").val("");
   DETAILS_TABLE.clearRows();
   DETAILS_TABLE.setInitialRows(ITEM_LIST.allDetailLabels());
-  updateDetailsTable();
   $("#itemFormInputComment").val("");
 
   if( com == "add" ){
-    //addのとき
+    submitBtn.data("command", "add");
   }else if( com == "edit" ){
     var item = ITEM_LIST.get(idx);
     if( item ){
@@ -94,7 +95,22 @@ function initItemEditDialog(com, idx){
         DETAILS_TABLE.setValue(details[i].label, details[i].value, true);
       }
     }
+    submitBtn.data("command", "edit").data("index", "idx");
   }
+
+  updateDetailsTable();
+}
+
+function parseItemForm(){
+  var item = new Item();
+  item.setName($("#itemFormInputName").val());
+  item.setPrice($("#itemFormInputPrice").val());
+  var details = DETAILS_TABLE.getValues();
+  for(var i=0; i<details.length; i++){
+    item.setDetail(details[i].label, details[i].value);
+  }
+  item.setComment($("#itemFormInputComment").val());
+  return item;
 }
 
 $(document).ready(function(){
@@ -117,5 +133,19 @@ $(".details-table-add-btn").on('click', function(event){
   if( label ){
     DETAILS_TABLE.addRow(label);
     updateDetailsTable();
+  }
+});
+
+$(".item-edit-dialog-submit-btn").on('click', function(event){
+  var t = $(this);
+  var t_command = t.data("command");
+  if( t_command == "add" ){
+    var item = parseItemForm();
+    ITEM_LIST.add(item);
+    updateItemListTable();
+  }else{
+    var item = parseItemForm();
+    ITEM_LIST.set(item, t.data("index"));
+    updateItemListTable();
   }
 });
