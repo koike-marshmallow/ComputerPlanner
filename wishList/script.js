@@ -10,7 +10,6 @@ function generateInitialItemList(){
 
 function updateItemListTable(){
   var tbody = $("<tbody></tbody>");
-  var sumPrice = 0;
 
   var dlabels = ITEM_LIST.allDetailLabels();
 
@@ -47,14 +46,13 @@ function updateItemListTable(){
     );
 
     tbody.append(tr);
-    sumPrice += item.getPrice();
   }
   tbody.append(
     $("<tr></tr>").append(
       $("<td></td>").attr("colspan", 2 + dlabels.length)
         .text("合計"),
       $("<td></td>").attr("colspan", "2")
-        .text(sumPrice)
+        .text(ITEM_LIST.getSumPrice())
     )
   );
 
@@ -170,10 +168,7 @@ $(".item-remove-dialog").on('show.bs.modal', function(event){
   var idx = parseInt(rel_index);
   if( idx >= 0 && idx < ITEM_LIST.length() ){
     $(".item-remove-dialog-item-name").text(ITEM_LIST.get(idx).getName());
-    $(".item-remove-dialog-submit-btn").on('click', function(){
-      ITEM_LIST.remove(idx);
-      updateItemListTable();
-    });
+    $(".item-remove-dialog-submit-btn").data("index", rel_index);
   }else{
     alert("error");
   }
@@ -198,6 +193,15 @@ $(".item-edit-dialog-submit-btn").on('click', function(event){
     var item = parseItemForm();
     var t_index = parseInt(t.data("index"));
     ITEM_LIST.set(t_index, item);
+    updateItemListTable();
+  }
+});
+
+
+$(".item-remove-dialog-submit-btn").on('click', function(event){
+  var t_idx = parseInt($(this).data("index"));
+  if( t_idx >= 0 && t_idx < ITEM_LIST.length() ){
+    ITEM_LIST.remove(t_idx);
     updateItemListTable();
   }
 });
