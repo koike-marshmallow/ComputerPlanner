@@ -12,9 +12,9 @@ Item.prototype.comment = "";
 Item.prototype.enabled = true;
 
 Item.prototype.getName = function(){ return this.name; };
-Item.prototype.setName = function(name){ this.name = name; };
+Item.prototype.setName = function(name){ this.name = name; return this;};
 Item.prototype.getPrice = function(){ return this.price; };
-Item.prototype.setPrice = function(price){ this.price = parseInt(price) };
+Item.prototype.setPrice = function(price){ this.price = parseInt(price); return this;};
 
 Item.prototype.setDetail = function(l, v){
   if( l !== undefined ){
@@ -24,6 +24,7 @@ Item.prototype.setDetail = function(l, v){
       delete this.detail[l];
     }
   }
+  return this;
 }
 
 Item.prototype.getDetail = function(l){
@@ -47,9 +48,9 @@ Item.prototype.getDetailString = function(){
 }
 
 Item.prototype.getComment = function(){ return this.comment; };
-Item.prototype.setComment = function(com){ this.comment = com; };
+Item.prototype.setComment = function(com){ this.comment = com; return this;};
 Item.prototype.isEnabled = function(){ return this.enabled; };
-Item.prototype.setEnabled = function(b){ this.enabled = b; };
+Item.prototype.setEnabled = function(b){ this.enabled = b; return this;};
 
 Item.prototype.toString = function(){
   var str = "Item@";

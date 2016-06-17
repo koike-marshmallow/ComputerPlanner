@@ -59,7 +59,7 @@
       <h1>Wish List</h1>
 
       <button type="button" class="btn btn-primary"
-        data-toggle="modal" data-target="#myModal" data-command="add">
+        data-toggle="modal" data-target="#itemEditModal" data-command="add">
       <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
       新規追加</button>
       <button type="button" class="btn btn-default init-btn">
@@ -71,34 +71,74 @@
           <tr><th>id</th><th>品名</th><th>価格</th></tr>
         </thead>
         <tbody>
-          <tr><td>1</td><td>粒あんパン</td><td>135</td></tr>
-          <tr><td>2</td><td>デニッシュロール</td><td>105</td></tr>
+          <tr><td>1</td><td>もの</td><td>135</td></tr>
           <tr><td colspan="2">合計</td><td>240</td></tr>
         </tbody>
       </table>
 
     </div><!-- /.container -->
 
-    <div class="modal fade itemDialog" id="myModal" tabindex="-1" role="dialog">
+    <!-- ITEM EDIT MODAL -->
+    <div class="modal fade item-edit-dialog" id="itemEditModal" tabindex="-1" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
-            <h4 class="modal-title itemDialog-title">アイテムダイアログ</h4>
+            <h4 class="modal-title item-edit-dialog-title">アイテムダイアログ</h4>
           </div>
           <div class="modal-body">
             <div class="form-group">
-              <label for="itemForm-ItemName">Item Name</label>
-              <input type="text" class="form-control" id="itemForm-ItemName"/>
+              <label for="itemFormInputName">Item Name</label>
+              <input type="text" class="form-control" id="itemFormInputName"/>
             </div>
-            <label for="itemForm-ItemPrice">Item Price</label>
-            <input type="text" class="form-control" id="itemForm-ItemPrice"/>
+            <div class="form-group">
+              <label for="itemFormInputPrice">Item Price</label>
+              <input type="text" class="form-control" id="itemFormInputPrice"/>
+            </div>
+            <div class="form-group">
+              <label>Details:</label>
+              <table class="table" id="itemFormDetailsTable">
+                <thead><tr><th>項目</th><th>値</th><th></th></tr></thead>
+                <tbody id="itemFormDetailsTableBody">
+                </tbody>
+              </table>
+              <button type="button" class="btn btn-default btn-sm details-table-add-btn">
+                <span class="glyphicon glyphicon-plus"></span> 項目を追加
+              </button>
+            </div>
+            <div class="form-group">
+              <label for="itemFormInputComment">Comment:</label>
+              <input type="text" class="form-control" id="itemFormInputComment"/>
+            </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary itemFormApplyBtn">Save changes</button>
+            <button type="button" class="btn btn-primary item-edit-dialog-submit-btn"
+               data-dismiss="modal">Save changes</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <!-- ITEM REMOVE MODAL -->
+    <div class="modal fade item-remove-dialog" id="itemRemoveModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title itemDialog-title">アイテム削除</h4>
+          </div>
+          <div class="modal-body">
+            <p>アイテム「<span class="item-remove-dialog-item-name"></span>」を削除してもよろしいですか？</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-danger item-remove-dialog-submit-btn"
+              data-dismiss="modal">Remove</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -109,11 +149,12 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="../jquery/jquery-2.2.4.min.js"></script>
-    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
     <script src="../bootstrap/js/bootstrap.min.js"></script>
 
     <script src="../item.js"></script>
     <script src="../item-list.js"></script>
+    <script src="utils.js"></script>
+    <script src="details-table.js"></script>
     <script src="script.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <!-- <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script> -->
