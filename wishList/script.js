@@ -1,157 +1,203 @@
-var ITEMLIST = null;
-
-function createItemDialogButton(contents, classValue, params){
-  var button = $("<button></button>")
-    .append(contents)
-    .attr("class", classValue);
-  if( params.target ) button.attr("data-toggle", "modal")
-    .attr("data-target", params.target);
-  if( params.command ) button.attr("data-command", params.command);
-  if( params.index !== undefined ) button.attr("data-index", params.index);
-  if( params.onClickCallback ) button.on('click', params.onClickCallback);
-  return button;
-}
-
-function createGlyphiconElement(glyphiconName){
-  return $("<span></span>").attr("class", "glyphicon " + glyphiconName);
-}
+var ITEM_LIST = null;
+var DETAILS_TABLE = null;
 
 function generateInitialItemList(){
   var list = new ItemList("test");
-  list.add(new Item("Sample Item 1", 500))
-    .add(new Item("Sample Item 2", 1260))
-    .add(new Item("Sample Item 3", 700));
+  list.add(new Item("item1", 300).setDetail("key1", "5b33"));
+  list.add(new Item("item2", 500));
   return list;
+}
+
+function updateItemListTable(){
+  var tbody = $("<tbody></tbody>");
+  var sumPrice = 0;
+
+  var dlabels = ITEM_LIST.allDetailLabels();
+
+  for(var i=0; i<ITEM_LIST.length(); i++){
+    var item = ITEM_LIST.get(i);
+
+    var editBtn = $("<button></button>")
+      .attr("type", "button")
+      .addClass("btn btn-default")
+      .attr("data-toggle", "modal")
+      .attr("data-target", "#itemEditModal")
+      .data("command", "edit")
+      .data("index", i)
+      .append(Utils.glyphicon("pencil"), "編集");
+    var deleteBtn = $("<button></button>")
+      .attr("type", "button")
+      .addClass("btn btn-default")
+      .attr("data-toggle", "modal")
+      .attr("data-target", "#itemRemoveModal")
+      .data("index", i)
+      .append(Utils.glyphicon("trash"), "削除");
+
+    var tr = $("<tr></tr>").append(
+      $("<td></td>").text(i + 1),
+      $("<td></td>").text(item.getName())
+    );
+    for(var j=0; j<dlabels.length; j++){
+      var tmp = item.getDetail(dlabels[j]);
+      tr.append($("<td></td>").text(tmp ? tmp : ""));
+    }
+    tr.append(
+      $("<td></td>").text(item.getPrice()),
+      $("<td></td>").append(editBtn, deleteBtn)
+    );
+
+    tbody.append(tr);
+    sumPrice += item.getPrice();
+  }
+  tbody.append(
+    $("<tr></tr>").append(
+      $("<td></td>").attr("colspan", 2 + dlabels.length)
+        .text("合計"),
+      $("<td></td>").attr("colspan", "2")
+        .text(sumPrice)
+    )
+  );
+
+  $(".itemlist-table").empty().append(
+    Utils.tableHead("id", "名前", dlabels, "価格", "操作"),
+    tbody
+  );
+
+  localStorage.setItem('itemlist', ItemList.stringifyJson(ITEM_LIST));
+}
+
+function updateDetailsTable(){
+  if( DETAILS_TABLE != null ){
+    $("#itemFormDetailsTable").empty().append(
+      $("<thead></thead>").append(
+        $("<tr></tr>").append(
+          $("<th></th>").text("項目"),
+          $("<th></th>").text("値"),
+          $("<th></th>").text("")
+        )
+      ),
+      DETAILS_TABLE.generateTableBody()
+    );
+  }
+  $(".details-table-remove-btn").on('click', function(event){
+    var label = $(this).data("label");
+    if( label && confirm("項目名" + label + "を除去してもよろしいですか？") ){
+      DETAILS_TABLE.removeRow(label);
+      updateDetailsTable();
+    }
+  });
+}
+
+function initItemEditDialog(com, idx){
+  var submitBtn = $(".item-edit-dialog-submit-btn");
+
+  $("#itemFormInputName").val("");
+  $("#itemFormInputPrice").val("");
+  DETAILS_TABLE.clearRows();
+  DETAILS_TABLE.setInitialRows(ITEM_LIST.allDetailLabels());
+  $("#itemFormInputComment").val("");
+
+  if( com == "add" ){
+    submitBtn.data("command", "add");
+  }else if( com == "edit" ){
+    var item = ITEM_LIST.get(idx);
+    if( item ){
+      $("#itemFormInputName").val(item.getName());
+      $("#itemFormInputPrice").val(item.getPrice());
+      $("#itemFormInputComment").val(item.getComment());
+      var details = item.getDetailList();
+      for(var i=0; i<details.length; i++){
+        DETAILS_TABLE.setValue(details[i].label, details[i].value, true);
+      }
+    }
+    submitBtn.data("command", "edit").data("index", idx);
+  }
+
+  updateDetailsTable();
+}
+
+function parseItemForm(){
+  var item = new Item();
+  item.setName($("#itemFormInputName").val());
+  item.setPrice($("#itemFormInputPrice").val());
+  var details = DETAILS_TABLE.getValues();
+  console.log(details);
+  for(var i=0; i<details.length; i++){
+    item.setDetail(details[i].label, details[i].value);
+  }
+  item.setComment($("#itemFormInputComment").val());
+  console.log(item.toString());
+  return item;
 }
 
 $(document).ready(function(){
   var resource = localStorage.getItem('itemlist');
   if( resource !== undefined && resource != null ){
-    ITEMLIST = ItemList.parseJson(resource);
+    ITEM_LIST = ItemList.parseJson(resource);
   }else{
-    ITEMLIST = generateInitialItemList();
+    ITEM_LIST = generateInitialItemList();
   }
-  setItemlistToTable($(".itemlist-table"), ITEMLIST);
-});
-
-$(".itemDialog").on('show.bs.modal', function(event){
-  var btn = $(event.relatedTarget);
-  var applyBtn = $(".itemFormApplyBtn");
-  var command = btn.data("command");
-  var index = btn.data("index");
-  var elem_title = $(".itemDialog-title");
-  var form_name = $("#itemForm-ItemName");
-  var form_price = $("#itemForm-ItemPrice");
-
-  if( command == "add" ){
-    elem_title.text("新規追加");
-    applyBtn.data("command", "add");
-    form_name.val("");
-    form_price.val("");
-
-  }else if( command == "edit" ){
-    if( index >= 0 && index < ITEMLIST.length() ){
-      elem_title.text("編集");
-      applyBtn.data("command", "edit");
-      applyBtn.data("index", index);
-      form_name.val(ITEMLIST.get(index).getName());
-      form_price.val(ITEMLIST.get(index).getPrice());
-    }
-
-  }else{
-    console.log("undefined command:" + command);
-  }
-});
-
-$(".itemFormApplyBtn").on('click', function(event){
-  var iname = $("#itemForm-ItemName").val();
-  var iprice = $("#itemForm-ItemPrice").val();
-  var com = $(this).data("command");
-  $(this).data("command", null);
-  var idx = $(this).data("index");
-  $(this).data("index", null);
-
-  if( com == "add" ){
-    ITEMLIST.add(new Item(iname, iprice));
-
-  }else if( com == "edit" ){
-    if( idx >= 0 && idx < ITEMLIST.length() ){
-      ITEMLIST.set(idx, new Item(iname, iprice));
-    }
-
-  }else{
-    console.log("undefined command: " + com);
-  }
-  $(".itemDialog").modal('hide');
-  updateItemList();
+  DETAILS_TABLE = new DetailsTable();
+  updateItemListTable();
+  updateDetailsTable();
 });
 
 $(".init-btn").on('click', function(event){
   if( confirm("ウィッシュリストを初期化します。よろしいですか？") ){
     localStorage.removeItem('itemlist');
-    ITEMLIST = generateInitialItemList();
-    updateItemList();
+    ITEM_LIST = generateInitialItemList();
+    updateItemListTable();
   }
 });
 
-function setItemlistToTable(table, list){
-  table.empty();
-  table.append(
-    $("<thead></thead>").append(
-      $("<tr></tr>").append(
-        $("<th></th>").text("No."),
-        $("<th></th>").text("名前"),
-        $("<th></th>").text("価格"),
-        $("<th></th>").text("操作")
-      )
-    )
-  );
-
-  var tbody = $("<tbody></tbody>");
-  var deleteBtnCallback = function(event){
-    var idx = $(this).data("index");
-    if( idx >= 0 && idx < ITEMLIST.length() ){
-      if( confirm(ITEMLIST.get(idx).getName() + "を削除しますか？") ){
-        ITEMLIST.remove(idx);
-        updateItemList();
-      }
-    }
+$(".item-edit-dialog").on('show.bs.modal', function(event){
+  var rel = $(event.relatedTarget);
+  var rel_command = rel.data("command");
+  var rel_index = rel.data("index");
+  if( rel_command == 'add' ){
+    $(".item-edit-dialog-title").text("アイテム追加");
+    $(".item-edit-dialog-submit-btn").text("Add item");
+  }else if( rel_command == 'edit' ){
+    $(".item-edit-dialog-title").text("アイテム編集");
+    $(".item-edit-dialog-submit-btn").text("Save changes");
   }
+  initItemEditDialog(rel_command, rel_index);
+})
 
-  for(var i=0; i<list.length(); i++){
-    var item = list.get(i);
-    var editBtn = createItemDialogButton(
-      [createGlyphiconElement("glyphicon-pencil"), " 編集"],
-      "btn btn-default",
-      {target:"#myModal", command: "edit", index:i});
-    var deleteBtn = createItemDialogButton(
-      [createGlyphiconElement("glyphicon-trash"), " 削除"],
-      "btn btn-default",
-      {command:"edit", index:i, onClickCallback:deleteBtnCallback});
-
-    tbody.append(
-      $("<tr></tr>").append(
-        $("<td></td>").text(i + 1),
-        $("<td></td>").text(item.getName()),
-        $("<td></td>").text(item.getPrice()),
-        $("<td></td>").append(editBtn, deleteBtn)
-      )
-    );
+$(".item-remove-dialog").on('show.bs.modal', function(event){
+  var rel = $(event.relatedTarget);
+  var rel_index = rel.data("index");
+  var idx = parseInt(rel_index);
+  if( idx >= 0 && idx < ITEM_LIST.length() ){
+    $(".item-remove-dialog-item-name").text(ITEM_LIST.get(idx).getName());
+    $(".item-remove-dialog-submit-btn").on('click', function(){
+      ITEM_LIST.remove(idx);
+      updateItemListTable();
+    });
+  }else{
+    alert("error");
   }
+});
 
-  tbody.append(
-    $("<tr></tr>").append(
-      $("<td></td>").attr("colspan", "2")
-        .text("合計"),
-      $("<td></td>").text(list.getSumPrice()),
-      $("<td></td>")
-    )
-  );
-  table.append(tbody);
-}
+$(".details-table-add-btn").on('click', function(event){
+  var label = prompt("新しい項目名を入力してください");
+  if( label ){
+    DETAILS_TABLE.addRow(label);
+    updateDetailsTable();
+  }
+});
 
-
-function updateItemList(){
-  setItemlistToTable($(".itemlist-table"), ITEMLIST);
-  localStorage.setItem('itemlist', ItemList.stringifyJson(ITEMLIST));
-}
+$(".item-edit-dialog-submit-btn").on('click', function(event){
+  var t = $(this);
+  var t_command = t.data("command");
+  if( t_command == "add" ){
+    var item = parseItemForm();
+    ITEM_LIST.add(item);
+    updateItemListTable();
+  }else{
+    var item = parseItemForm();
+    var t_index = parseInt(t.data("index"));
+    ITEM_LIST.set(t_index, item);
+    updateItemListTable();
+  }
+});

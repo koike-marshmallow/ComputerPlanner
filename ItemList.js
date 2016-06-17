@@ -20,7 +20,10 @@ ItemList.prototype.insert = function(idx, item){
 }
 
 ItemList.prototype.set = function(idx, item){
-  this.list[idx] = item;
+  var pidx = parseInt(idx);
+  if( pidx >= 0 && pidx < this.list.length ){
+    this.list[idx] = item;
+  }
   return this;
 }
 
@@ -62,6 +65,26 @@ ItemList.prototype.getSumPrice = function(all){
         }
     }
     return price;
+}
+
+ItemList.prototype.allDetailLabels = function(){
+  var collector = {
+    labels: [],
+    push: function(key){
+      var equals = function(e, i, a){return e == key;};
+      if( this.labels.filter(equals).length < 1 ){
+        this.labels.push(key);
+      }
+  }};
+
+  for(var i=0; i<this.list.length; i++){
+    var tmp = this.list[i].getDetailList();
+    for(var j=0; j<tmp.length; j++){
+      collector.push(tmp[j].label);
+    }
+  }
+
+  return collector.labels;
 }
 
 ItemList.prototype.toString = function(){
