@@ -65,6 +65,8 @@ function updateItemListTable(){
     Utils.tableHead("id", "名前", dlabels, "価格", "操作"),
     tbody
   );
+
+  localStorage.setItem('itemlist', ItemList.stringifyJson(ITEM_LIST));
 }
 
 function updateDetailsTable(){
@@ -132,10 +134,23 @@ function parseItemForm(){
 }
 
 $(document).ready(function(){
+  var resource = localStorage.getItem('itemlist');
+  if( resource !== undefined && resource != null ){
+    ITEM_LIST = ItemList.parseJson(resource);
+  }else{
+    ITEM_LIST = generateInitialItemList();
+  }
   DETAILS_TABLE = new DetailsTable();
-  ITEM_LIST = generateInitialItemList();
   updateItemListTable();
   updateDetailsTable();
+});
+
+$(".init-btn").on('click', function(event){
+  if( confirm("ウィッシュリストを初期化します。よろしいですか？") ){
+    localStorage.removeItem('itemlist');
+    ITEM_LIST = generateInitialItemList();
+    updateItemListTable();
+  }
 });
 
 $(".item-edit-dialog").on('show.bs.modal', function(event){
