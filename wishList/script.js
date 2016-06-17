@@ -16,21 +16,28 @@ function updateItemListTable(){
 
   for(var i=0; i<ITEM_LIST.length(); i++){
     var item = ITEM_LIST.get(i);
+
+    var editBtn = $("<button></button>")
+      .attr("type", "button")
+      .addClass("btn btn-default")
+      .attr("data-toggle", "modal")
+      .attr("data-target", "#itemEditModal")
+      .data("command", "edit")
+      .data("index", i)
+      .append(Utils.glyphicon("pencil"), "編集");
+    var deleteBtn = $("<button></button>")
+      .attr("type", "button")
+      .addClass("btn btn-default")
+      .attr("data-toggle", "modal")
+      .attr("data-target", "#itemRemoveModal")
+      .append(Utils.glyphicon("trash"), "削除");
+
     tbody.append(
       $("<tr></tr>").append(
         $("<td></td>").text(i + 1),
         $("<td></td>").text(item.getName()),
         $("<td></td>").text(item.getPrice()),
-        $("<td></td>").append(
-          $("<button></button>")
-            .attr("type", "button")
-            .addClass("btn btn-default")
-            .append(Utils.glyphicon("pencil"), "編集"),
-          $("<button></button>")
-            .attr("type", "button")
-            .addClass("btn btn-default")
-            .append(Utils.glyphicon("trash"), "削除")
-        )
+        $("<td></td>").append(editBtn, deleteBtn)
       )
     );
     sumPrice += item.getPrice();
@@ -70,7 +77,6 @@ function updateDetailsTable(){
       updateDetailsTable();
     }
   });
-  console.log(DETAILS_TABLE.getValues());
 }
 
 function initItemEditDialog(com, idx){
@@ -95,7 +101,7 @@ function initItemEditDialog(com, idx){
         DETAILS_TABLE.setValue(details[i].label, details[i].value, true);
       }
     }
-    submitBtn.data("command", "edit").data("index", "idx");
+    submitBtn.data("command", "edit").data("index", idx);
   }
 
   updateDetailsTable();
@@ -106,10 +112,12 @@ function parseItemForm(){
   item.setName($("#itemFormInputName").val());
   item.setPrice($("#itemFormInputPrice").val());
   var details = DETAILS_TABLE.getValues();
+  console.log(details);
   for(var i=0; i<details.length; i++){
     item.setDetail(details[i].label, details[i].value);
   }
   item.setComment($("#itemFormInputComment").val());
+  console.log(item.toString());
   return item;
 }
 
@@ -145,7 +153,8 @@ $(".item-edit-dialog-submit-btn").on('click', function(event){
     updateItemListTable();
   }else{
     var item = parseItemForm();
-    ITEM_LIST.set(item, t.data("index"));
+    var t_index = parseInt(t.data("index"));
+    ITEM_LIST.set(t_index, item);
     updateItemListTable();
   }
 });

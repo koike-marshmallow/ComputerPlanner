@@ -20,7 +20,10 @@ ItemList.prototype.insert = function(idx, item){
 }
 
 ItemList.prototype.set = function(idx, item){
-  this.list[idx] = item;
+  var pidx = parseInt(idx);
+  if( pidx >= 0 && pidx < this.list.length ){
+    this.list[idx] = item;
+  }
   return this;
 }
 
@@ -81,7 +84,7 @@ ItemList.prototype.allDetailLabels = function(){
   }
 
   return collector.labels;
-}  
+}
 
 ItemList.prototype.toString = function(){
   str = "ItemList@\"" + this.label + "\"(" + this.length() + ")\n";
