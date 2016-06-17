@@ -14,6 +14,9 @@ function updateItemListTable(){
   var tbody = $("<tbody></tbody>");
   var sumPrice = 0;
 
+  var dlabels = ITEM_LIST.allDetailLabels();
+  console.log(dlabels);
+
   for(var i=0; i<ITEM_LIST.length(); i++){
     var item = ITEM_LIST.get(i);
 
@@ -33,27 +36,33 @@ function updateItemListTable(){
       .data("index", i)
       .append(Utils.glyphicon("trash"), "削除");
 
-    tbody.append(
-      $("<tr></tr>").append(
-        $("<td></td>").text(i + 1),
-        $("<td></td>").text(item.getName()),
-        $("<td></td>").text(item.getPrice()),
-        $("<td></td>").append(editBtn, deleteBtn)
-      )
+    var tr = $("<tr></tr>").append(
+      $("<td></td>").text(i + 1),
+      $("<td></td>").text(item.getName())
     );
+    for(var j=0; j<dlabels.length; j++){
+      var tmp = item.getDetail(dlabels[j]);
+      tr.append($("<td></td>").text(tmp ? tmp : ""));
+    }
+    tr.append(
+      $("<td></td>").text(item.getPrice()),
+      $("<td></td>").append(editBtn, deleteBtn)
+    );
+
+    tbody.append(tr);
     sumPrice += item.getPrice();
   }
   tbody.append(
     $("<tr></tr>").append(
       $("<td></td>").attr("colspan", "2")
         .text("合計"),
-      $("<td></td>").attr("colspan", "2")
+      $("<td></td>").attr("colspan", 2 + dlabels.length)
         .text(sumPrice)
     )
   );
 
   $(".itemlist-table").empty().append(
-    Utils.tableHead("id", "名前", "価格", "操作"),
+    Utils.tableHead("id", "名前", dlabels, "価格", "操作"),
     tbody
   );
 }
