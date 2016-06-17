@@ -30,6 +30,7 @@ function updateItemListTable(){
       .addClass("btn btn-default")
       .attr("data-toggle", "modal")
       .attr("data-target", "#itemRemoveModal")
+      .data("index", i)
       .append(Utils.glyphicon("trash"), "削除");
 
     tbody.append(
@@ -132,9 +133,23 @@ $(".item-edit-dialog").on('show.bs.modal', function(event){
   var rel = $(event.relatedTarget);
   var rel_command = rel.data("command");
   var rel_index = rel.data("index");
-  console.log("item-edit-dialog:show.bs.modal > comannd\"" + rel_command + "\"");
   initItemEditDialog(rel_command, rel_index);
 })
+
+$(".item-remove-dialog").on('show.bs.modal', function(event){
+  var rel = $(event.relatedTarget);
+  var rel_index = rel.data("index");
+  var idx = parseInt(rel_index);
+  if( idx >= 0 && idx < ITEM_LIST.length() ){
+    $(".item-remove-dialog-item-name").text(ITEM_LIST.get(idx).getName());
+    $(".item-remove-dialog-submit-btn").on('click', function(){
+      ITEM_LIST.remove(idx);
+      updateItemListTable();
+    });
+  }else{
+    alert("error");
+  }
+});
 
 $(".details-table-add-btn").on('click', function(event){
   var label = prompt("新しい項目名を入力してください");
