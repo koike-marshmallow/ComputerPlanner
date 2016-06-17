@@ -5,8 +5,6 @@ function generateInitialItemList(){
   var list = new ItemList("test");
   list.add(new Item("item1", 300).setDetail("key1", "5b33"));
   list.add(new Item("item2", 500));
-  console.log("init: " + ItemList.stringifyJson(list));
-  console.log(list.allDetailLabels());
   return list;
 }
 
@@ -15,7 +13,6 @@ function updateItemListTable(){
   var sumPrice = 0;
 
   var dlabels = ITEM_LIST.allDetailLabels();
-  console.log(dlabels);
 
   for(var i=0; i<ITEM_LIST.length(); i++){
     var item = ITEM_LIST.get(i);
