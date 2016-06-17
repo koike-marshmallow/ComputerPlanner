@@ -38,6 +38,7 @@ ItemList.prototype.remove = function(idx){
 
 ItemList.prototype.setEnabled = function(idx, b){
     this.list[idx].setEnabled(b);
+    return this;
 }
 
 ItemList.prototype.filter = function(filter){
