@@ -51,9 +51,9 @@ function updateItemListTable(){
   }
   tbody.append(
     $("<tr></tr>").append(
-      $("<td></td>").attr("colspan", "2")
-        .text("合計"),
       $("<td></td>").attr("colspan", 2 + dlabels.length)
+        .text("合計"),
+      $("<td></td>").attr("colspan", "2")
         .text(sumPrice)
     )
   );
@@ -154,6 +154,13 @@ $(".item-edit-dialog").on('show.bs.modal', function(event){
   var rel = $(event.relatedTarget);
   var rel_command = rel.data("command");
   var rel_index = rel.data("index");
+  if( rel_command == 'add' ){
+    $(".item-edit-dialog-title").text("アイテム追加");
+    $(".item-edit-dialog-submit-btn").text("Add item");
+  }else if( rel_command == 'edit' ){
+    $(".item-edit-dialog-title").text("アイテム編集");
+    $(".item-edit-dialog-submit-btn").text("Save changes");
+  }
   initItemEditDialog(rel_command, rel_index);
 })
 
